@@ -8,7 +8,7 @@
       "content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.0;\r\n\r\ninterface IPriceOracle {\r\n    function getPrice(address token) external view returns (uint256);\r\n}"
     },
     "contracts/PriceAggregator.sol": {
-      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\nimport \"./AggregatorInterface.sol\";\nimport \"./IPriceOracle.sol\";\n\ncontract PriceAggregator is AggregatorInterface {\n    IPriceOracle private priceOracle;\n    address private token;\n\n    constructor (address _priceOracle, address _token) {\n        priceOracle = IPriceOracle(_priceOracle);\n        token = _token;\n    }\n    function latestAnswer() external view returns (int256) {\n        uint256 price = priceOracle.getPrice(token);\n        return int256(price); // decimals = 8\n    }\n}"
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\nimport \"./AggregatorInterface.sol\";\nimport \"./IPriceOracle.sol\";\n\ncontract PriceAggregator is AggregatorInterface {\n    IPriceOracle private priceOracle;\n    address private token;\n\n    constructor (address _priceOracle, address _token) {\n        priceOracle = IPriceOracle(_priceOracle);\n        token = _token;\n    }\n    function latestAnswer() external view returns (int256) {\n        uint256 price = priceOracle.getPrice(token);\n        return int256(price); // decimals = 8\n    }\n\n    function decimals() external pure returns (uint8) {\n        return 8;\n    }\n}"
     }
   },
   "settings": {

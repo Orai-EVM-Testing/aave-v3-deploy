@@ -42,6 +42,7 @@ const func: DeployFunction = async function ({
   const reserves = await getReserveAddresses(poolConfig, network);
   const priceOracleAddress_sapphireTestnet = "0x2300221C0719748D6322F24444e938C8873eb200";
 
+
   let symbols = reserves ? Object.keys(reserves) : [];
 
   if (isIncentivesEnabled(poolConfig)) {

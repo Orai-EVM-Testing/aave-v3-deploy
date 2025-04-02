@@ -15,4 +15,8 @@ contract PriceAggregator is AggregatorInterface {
         uint256 price = priceOracle.getPrice(token);
         return int256(price); // decimals = 8
     }
+
+    function decimals() external pure returns (uint8) {
+        return 8;
+    }
 }

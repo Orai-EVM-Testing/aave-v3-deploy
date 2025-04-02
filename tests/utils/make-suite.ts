@@ -194,7 +194,6 @@ export async function initializeMakeSuite() {
   )) as WalletBalanceProvider;
 
   const allTokens = await testEnv.helpersContract.getAllATokens();
-  console.log(allTokens);
   // const aDaiAddress = allTokens.find(
   //   (aToken) => aToken.symbol === "aEthDAI"
   // )?.tokenAddress;
@@ -206,7 +205,6 @@ export async function initializeMakeSuite() {
   //   (aToken) => aToken.symbol === "aEthWETH"
   // )?.tokenAddress;
   const reservesTokens = await testEnv.helpersContract.getAllReservesTokens();
-  console.log(reservesTokens);
 
   // const daiAddress = reservesTokens.find(
   //   (token) => token.symbol === "DAI"
@@ -259,7 +257,6 @@ export async function initializeMakeSuite() {
   if (!usdcAddress || !wroseAddress) {
     process.exit(1);
   }
-  console.log(1);
   // testEnv.aDai = await getAToken(aDaiAddress);
   // testEnv.variableDebtDai = await getVariableDebtToken(variableDebtDaiAddress);
   // testEnv.stableDebtDai = await getStableDebtToken(stableDebtDaiAddress);
