@@ -22,6 +22,8 @@ import PolygonMarket from "../markets/polygon";
 import OptimisticConfig from "../markets/optimistic";
 import ArbitrumConfig from "../markets/arbitrum";
 import BaseConfig from "../markets/base";
+import SapphireMarket from "../markets/sapphire";
+import OraiMarket from "../markets/orai";
 import { isValidAddress } from "./utilities/utils";
 import { AaveProtocolDataProvider } from "../typechain";
 import {
@@ -52,6 +54,8 @@ export enum ConfigNames {
   Ethereum = "Ethereum",
   Base = "Base",
   baseGoerli = "base-goerli",
+  Sapphire = "Sapphire",
+  Orai = "Orai",
 }
 
 export const getParamPerNetwork = <T>(
@@ -119,6 +123,10 @@ export const loadPoolConfig = (configName: ConfigNames): PoolConfiguration => {
       return EthereumV3Config;
     case ConfigNames.Base:
       return BaseConfig;
+    case ConfigNames.Sapphire:
+      return SapphireMarket;
+    case ConfigNames.Orai:
+      return OraiMarket;
     default:
       throw new Error(
         `Unsupported pool configuration: ${configName} is not one of the supported configs ${Object.values(
@@ -190,18 +198,19 @@ export const getReserveAddresses = async (
   console.log(
     "[WARNING] Using deployed Testnet tokens instead of ReserveAssets from configuration file"
   );
-  const reservesKeys = Object.keys(poolConfig.ReservesConfig);
-  const allDeployments = await hre.deployments.all();
-  const testnetTokenKeys = Object.keys(allDeployments).filter(
-    (key) =>
-      key.includes(TESTNET_TOKEN_PREFIX) &&
-      reservesKeys.includes(key.replace(TESTNET_TOKEN_PREFIX, ""))
-  );
-  return testnetTokenKeys.reduce<ITokenAddress>((acc, key) => {
-    const symbol = key.replace(TESTNET_TOKEN_PREFIX, "");
-    acc[symbol] = allDeployments[key].address;
-    return acc;
-  }, {});
+  
+  // const reservesKeys = Object.keys(poolConfig.ReservesConfig);
+  // const allDeployments = await hre.deployments.all();
+  // const testnetTokenKeys = Object.keys(allDeployments).filter(
+  //   (key) =>
+  //     key.includes(TESTNET_TOKEN_PREFIX) &&
+  //     reservesKeys.includes(key.replace(TESTNET_TOKEN_PREFIX, ""))
+  // );
+  // return testnetTokenKeys.reduce<ITokenAddress>((acc, key) => {
+  //   const symbol = key.replace(TESTNET_TOKEN_PREFIX, "");
+  //   acc[symbol] = allDeployments[key].address;
+  //   return acc;
+  // }, {});
 };
 
 export const getSubTokensByPrefix = async (

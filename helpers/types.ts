@@ -18,13 +18,25 @@ export type eNetwork =
   | eFantomNetwork
   | eOptimismNetwork
   | eTenderlyNetwork
-  | eBaseNetwork;
+  | eBaseNetwork
+  | eOasisNetwork
+  | eOraiNetwork;
 
 type eTenderlyNetwork = "tenderly";
 
 export enum eFantomNetwork {
   main = "fantom",
   testnet = "fantom-testnet",
+}
+
+export enum eOraiNetwork {
+  oraiTestnet = "oraiTestnet",
+  oraiMainnet = "oraiMainnet",
+}
+
+export enum eOasisNetwork {
+  sapphireTestnet = "sapphireTestnet",
+  sapphireMainnet = "sapphireMainnet"
 }
 
 export enum eOptimismNetwork {

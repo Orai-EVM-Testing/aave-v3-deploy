@@ -6,7 +6,7 @@ import {
 import { Signer } from "ethers";
 import { evmRevert, evmSnapshot } from "../../helpers/utilities/tx";
 import { tEthereumAddress } from "../../helpers/types";
-import { Pool } from "../../typechain";
+import { MintableERC20, Pool, WalletBalanceProvider } from "../../typechain";
 import { AaveProtocolDataProvider } from "../../typechain";
 import { AToken } from "../../typechain";
 import { PoolConfigurator } from "../../typechain";
@@ -20,8 +20,9 @@ import {
   StableDebtToken,
   VariableDebtToken,
   WETH9,
-  WrappedTokenGateway,
+  WrappedTokenGatewayV3,
   Faucet,
+  UiPoolDataProviderV3,
 } from "../../typechain";
 import {
   ORACLE_ID,
@@ -42,6 +43,7 @@ import {
 import { ethers, deployments } from "hardhat";
 import { getEthersSigners } from "../../helpers/utilities/signer";
 import { MARKET_NAME } from "../../helpers/env";
+import { ERC20Mintable } from "../../typechain/contracts";
 
 export interface SignerWithAddress {
   signer: Signer;
@@ -57,19 +59,26 @@ export interface TestEnv {
   configurator: PoolConfigurator;
   oracle: AaveOracle;
   helpersContract: AaveProtocolDataProvider;
-  weth: WETH9;
-  aWETH: AToken;
-  dai: IERC20;
-  aDai: AToken;
-  variableDebtDai: VariableDebtToken;
-  stableDebtDai: StableDebtToken;
+  // weth: WETH9;
+  // aWETH: AToken;
+  // dai: IERC20;
+  // aDai: AToken;
+  // variableDebtDai: VariableDebtToken;
+  // stableDebtDai: StableDebtToken;
+  // aUsdc: AToken;
+  // usdc: IERC20;
+  // aave: IERC20;
+  wrose: WETH9;
+  aWrose: AToken;
+  usdc: ERC20Mintable;
   aUsdc: AToken;
-  usdc: IERC20;
-  aave: IERC20;
+  variableDebtUsdc: VariableDebtToken;
   addressesProvider: PoolAddressesProvider;
   registry: PoolAddressesProviderRegistry;
-  wrappedTokenGateway: WrappedTokenGateway;
+  wrappedTokenGateway: WrappedTokenGatewayV3;
   faucetOwnable: Faucet;
+  uiPoolDataProvider: UiPoolDataProviderV3;
+  walletBalanceProvider: WalletBalanceProvider;
 }
 
 let HardhatSnapshotId: string = "0x1";
@@ -87,37 +96,41 @@ const testEnv: TestEnv = {
   configurator: {} as PoolConfigurator,
   helpersContract: {} as AaveProtocolDataProvider,
   oracle: {} as AaveOracle,
-  weth: {} as WETH9,
-  aWETH: {} as AToken,
-  dai: {} as IERC20,
-  aDai: {} as AToken,
-  variableDebtDai: {} as VariableDebtToken,
-  stableDebtDai: {} as StableDebtToken,
-  aUsdc: {} as AToken,
-  usdc: {} as IERC20,
-  aave: {} as IERC20,
+  // weth: {} as WETH9,
+  // aWETH: {} as AToken,
+  // dai: {} as IERC20,
+  // aDai: {} as AToken,
+  // variableDebtDai: {} as VariableDebtToken,
+  // stableDebtDai: {} as StableDebtToken,
+  // aUsdc: {} as AToken,
+  // usdc: {} as IERC20,
+  // aave: {} as IERC20,
+  wrose: {} as WETH9,
+  aWrose: {} as AToken,
+  variableDebtUsdc: {} as VariableDebtToken,
   addressesProvider: {} as PoolAddressesProvider,
   registry: {} as PoolAddressesProviderRegistry,
-  wrappedTokenGateway: {} as WrappedTokenGateway,
+  wrappedTokenGateway: {} as WrappedTokenGatewayV3,
   faucetOwnable: {} as Faucet,
+  uiPoolDataProvider: {} as UiPoolDataProviderV3,
+  walletBalanceProvider: {} as WalletBalanceProvider,
 } as TestEnv;
 
 export async function initializeMakeSuite() {
   const poolConfig = await loadPoolConfig(MARKET_NAME as ConfigNames);
 
-  const [_deployer, ...restSigners] = await getEthersSigners();
+  const accounts = await ethers.getSigners();
   const deployer: SignerWithAddress = {
-    address: await _deployer.getAddress(),
-    signer: _deployer,
+    address: await accounts[0].getAddress(),
+    signer: accounts[0],
   };
 
-  for (const signer of restSigners) {
+  for (const signer of accounts) {
     testEnv.users.push({
       signer,
       address: await signer.getAddress(),
     });
   }
-
   const wrappedTokenGatewayArtifact = await deployments.get(
     "WrappedTokenGatewayV3"
   );
@@ -133,6 +146,8 @@ export async function initializeMakeSuite() {
   );
   const priceOracleArtifact = await deployments.get(ORACLE_ID);
   const dataProviderArtifact = await deployments.get(POOL_DATA_PROVIDER);
+  const uiPoolDataProviderArtifact = await deployments.get("UiPoolDataProviderV3");
+  const walletBalanceProviderArtifact = await deployments.get("WalletBalanceProvider");
 
   testEnv.deployer = deployer;
   testEnv.poolAdmin = deployer;
@@ -141,12 +156,11 @@ export async function initializeMakeSuite() {
   testEnv.wrappedTokenGateway = (await ethers.getContractAt(
     "WrappedTokenGatewayV3",
     wrappedTokenGatewayArtifact.address
-  )) as WrappedTokenGateway;
+  )) as WrappedTokenGatewayV3;
   testEnv.pool = (await ethers.getContractAt(
     "Pool",
     poolArtifact.address
   )) as Pool;
-
   testEnv.configurator = (await ethers.getContractAt(
     "PoolConfigurator",
     configuratorArtifact.address
@@ -156,7 +170,6 @@ export async function initializeMakeSuite() {
     "PoolAddressesProvider",
     addressesProviderArtifact.address
   )) as PoolAddressesProvider;
-
   testEnv.registry = (await ethers.getContractAt(
     "PoolAddressesProviderRegistry",
     addressesProviderRegistryArtifact.address
@@ -165,66 +178,115 @@ export async function initializeMakeSuite() {
     "AaveOracle",
     priceOracleArtifact.address
   )) as AaveOracle;
-
   testEnv.helpersContract = (await ethers.getContractAt(
     dataProviderArtifact.abi,
     dataProviderArtifact.address
   )) as AaveProtocolDataProvider;
 
+  testEnv.uiPoolDataProvider = (await ethers.getContractAt(
+    "UiPoolDataProviderV3",
+    uiPoolDataProviderArtifact.address
+  )) as UiPoolDataProviderV3;
+
+  testEnv.walletBalanceProvider = (await ethers.getContractAt(
+    "WalletBalanceProvider",
+    walletBalanceProviderArtifact.address
+  )) as WalletBalanceProvider;
+
   const allTokens = await testEnv.helpersContract.getAllATokens();
-  const aDaiAddress = allTokens.find(
-    (aToken) => aToken.symbol === "aEthDAI"
-  )?.tokenAddress;
-  const aUsdcAddress = allTokens.find(
-    (aToken) => aToken.symbol === "aEthUSDC"
-  )?.tokenAddress;
+  console.log(allTokens);
+  // const aDaiAddress = allTokens.find(
+  //   (aToken) => aToken.symbol === "aEthDAI"
+  // )?.tokenAddress;
+  // const aUsdcAddress = allTokens.find(
+  //   (aToken) => aToken.symbol === "aEthUSDC"
+  // )?.tokenAddress;
 
-  const aWEthAddress = allTokens.find(
-    (aToken) => aToken.symbol === "aEthWETH"
-  )?.tokenAddress;
-
+  // const aWEthAddress = allTokens.find(
+  //   (aToken) => aToken.symbol === "aEthWETH"
+  // )?.tokenAddress;
   const reservesTokens = await testEnv.helpersContract.getAllReservesTokens();
+  console.log(reservesTokens);
 
-  const daiAddress = reservesTokens.find(
-    (token) => token.symbol === "DAI"
+  // const daiAddress = reservesTokens.find(
+  //   (token) => token.symbol === "DAI"
+  // )?.tokenAddress;
+  // const {
+  //   variableDebtTokenAddress: variableDebtDaiAddress,
+  //   stableDebtTokenAddress: stableDebtDaiAddress,
+  // } = await testEnv.helpersContract.getReserveTokensAddresses(daiAddress || "");
+  // const usdcAddress = reservesTokens.find(
+  //   (token) => token.symbol === "USDC"
+  // )?.tokenAddress;
+  // const aaveAddress = reservesTokens.find(
+  //   (token) => token.symbol === "AAVE"
+  // )?.tokenAddress;
+  // const wethAddress = reservesTokens.find(
+  //   (token) => token.symbol === "WETH"
+  // )?.tokenAddress;
+
+  // if (!aDaiAddress || !aWEthAddress || !aUsdcAddress) {
+  //   process.exit(1);
+  // }
+  // if (!daiAddress || !usdcAddress || !aaveAddress || !wethAddress) {
+  //   process.exit(1);
+  // }
+
+
+  const aUsdcAddress = allTokens.find(
+    (aToken) => aToken.symbol === "asapphireUSDC"
   )?.tokenAddress;
-  const {
-    variableDebtTokenAddress: variableDebtDaiAddress,
-    stableDebtTokenAddress: stableDebtDaiAddress,
-  } = await testEnv.helpersContract.getReserveTokensAddresses(daiAddress || "");
+
+  const aWroseAddress = allTokens.find(
+    (aToken) => aToken.symbol === "asapphireWROSE"
+  )?.tokenAddress;
+  
   const usdcAddress = reservesTokens.find(
     (token) => token.symbol === "USDC"
   )?.tokenAddress;
-  const aaveAddress = reservesTokens.find(
-    (token) => token.symbol === "AAVE"
-  )?.tokenAddress;
-  const wethAddress = reservesTokens.find(
-    (token) => token.symbol === "WETH"
-  )?.tokenAddress;
 
-  if (!aDaiAddress || !aWEthAddress || !aUsdcAddress) {
-    process.exit(1);
-  }
-  if (!daiAddress || !usdcAddress || !aaveAddress || !wethAddress) {
+  const wroseAddress = reservesTokens.find(
+    (token) => token.symbol === "wROSE"
+  )?.tokenAddress;
+  const {
+    variableDebtTokenAddress: variableDebtUsdcAddress,
+  } = await testEnv.helpersContract.getReserveTokensAddresses(usdcAddress || "");
+  
+  if (!aUsdcAddress || !aWroseAddress) {
     process.exit(1);
   }
 
-  testEnv.aDai = await getAToken(aDaiAddress);
-  testEnv.variableDebtDai = await getVariableDebtToken(variableDebtDaiAddress);
-  testEnv.stableDebtDai = await getStableDebtToken(stableDebtDaiAddress);
+  if (!usdcAddress || !wroseAddress) {
+    process.exit(1);
+  }
+  console.log(1);
+  // testEnv.aDai = await getAToken(aDaiAddress);
+  // testEnv.variableDebtDai = await getVariableDebtToken(variableDebtDaiAddress);
+  // testEnv.stableDebtDai = await getStableDebtToken(stableDebtDaiAddress);
+  // testEnv.aUsdc = await getAToken(aUsdcAddress);
+  // testEnv.aWETH = await getAToken(aWEthAddress);
+
+  // testEnv.dai = await getERC20(daiAddress);
+  // testEnv.usdc = await getERC20(usdcAddress);
+  // testEnv.aave = await getERC20(aaveAddress);
+  // testEnv.weth = await getWETH(wethAddress);
+
   testEnv.aUsdc = await getAToken(aUsdcAddress);
-  testEnv.aWETH = await getAToken(aWEthAddress);
+  testEnv.aWrose = await getAToken(aWroseAddress);
+  testEnv.variableDebtUsdc = await getVariableDebtToken(variableDebtUsdcAddress);
 
-  testEnv.dai = await getERC20(daiAddress);
-  testEnv.usdc = await getERC20(usdcAddress);
-  testEnv.aave = await getERC20(aaveAddress);
-  testEnv.weth = await getWETH(wethAddress);
+  // testEnv.usdc = await getERC20(usdcAddress);
+  testEnv.usdc = (await ethers.getContractAt(
+    "ERC20Mintable",
+    usdcAddress
+  )) as ERC20Mintable;
+  testEnv.wrose = await getWETH(wroseAddress);
+
 
   if (isTestnetMarket(poolConfig)) {
     testEnv.faucetOwnable = await getFaucet();
   }
 }
-
 const setSnapshot = async () => {
   setHardhatSnapshotId(await evmSnapshot());
 };
@@ -235,12 +297,13 @@ const revertHead = async () => {
 
 export function makeSuite(name: string, tests: (testEnv: TestEnv) => void) {
   describe(name, () => {
-    before(async () => {
-      await setSnapshot();
-    });
+    // before(async () => {
+    //   await setSnapshot();
+    // });
     tests(testEnv);
-    after(async () => {
-      await revertHead();
-    });
+    // after(async () => {
+    //   await revertHead();
+    // });
   });
 }
+

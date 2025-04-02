@@ -1,3 +1,4 @@
+import { chainlinkAggregatorProxy } from './../../helpers/constants';
 import { getChainlinkOracles } from "../../helpers/market-config-helpers";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
@@ -41,10 +42,21 @@ const func: DeployFunction = async function ({
   const fallbackOracleAddress = ZERO_ADDRESS;
 
   const reserveAssets = await getReserveAddresses(poolConfig, network);
-  const chainlinkAggregators = await getChainlinkOracles(poolConfig, network);
+  // const chainlinkAggregators = await getChainlinkOracles(poolConfig, network);
 
+  const { address: USDTPriceAggregator} = await deployments.get("USDT-TestnetPriceAggregator-Sapphire");
+  const { address: USDCPriceAggregator} = await deployments.get("USDC-TestnetPriceAggregator-Sapphire");
+  const { address: WROSEPriceAggregator} = await deployments.get("WROSE-TestnetPriceAggregator-Sapphire");
+  const { address: stROSEPriceAggregator} = await deployments.get("stROSE-TestnetPriceAggregator-Sapphire");
+
+  const chainlinkAggregators = {
+    USDT: USDTPriceAggregator,
+    USDC: USDCPriceAggregator,
+    WROSE: WROSEPriceAggregator,
+    stROSE: stROSEPriceAggregator,
+  }
   const [assets, sources] = getPairsTokenAggregator(
-    reserveAssets,
+    reserveAssets as { [tokenSymbol: string]: string },
     chainlinkAggregators
   );
 

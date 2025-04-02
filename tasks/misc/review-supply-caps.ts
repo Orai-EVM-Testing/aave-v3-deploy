@@ -74,7 +74,7 @@ task(`review-supply-caps`, ``)
           normalizedSymbol
         );
         const expectedSupplyCap =
-          poolConfig.ReservesConfig[normalizedSymbol.toUpperCase()].supplyCap;
+          poolConfig.ReservesConfig[normalizedSymbol].supplyCap;
         const onChainSupplyCap = (
           await dataProvider.getReserveCaps(tokenAddress)
         ).supplyCap.toString();

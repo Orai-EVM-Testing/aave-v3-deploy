@@ -71,7 +71,7 @@ task(`review-stable-borrow`, ``)
           normalizedSymbol
         );
         const expectedStableRateEnabled =
-          poolConfig.ReservesConfig[normalizedSymbol.toUpperCase()]
+          poolConfig.ReservesConfig[normalizedSymbol]
             .stableBorrowRateEnabled;
         const onChainStableRateEnabled = (
           await dataProvider.getReserveConfigurationData(tokenAddress)

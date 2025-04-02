@@ -12,6 +12,8 @@ import {
   eFantomNetwork,
   eOptimismNetwork,
   eBaseNetwork,
+  eOasisNetwork,
+  eOraiNetwork,
 } from "./types";
 
 require("dotenv").config();
@@ -98,6 +100,9 @@ export const NETWORKS_RPC_URL: iParamsPerNetwork<string> = {
   [eBaseNetwork.base]: `https://base-mainnet.g.alchemy.com/v2/${getAlchemyKey(
     eBaseNetwork.base
   )}`,
+  [eOasisNetwork.sapphireTestnet]: `https://testnet.sapphire.oasis.dev`,
+  [eOasisNetwork.sapphireMainnet]: `https://sapphire.oasis.io/`,
+  [eOraiNetwork.oraiMainnet]: `https://evm.orai.io`,
 };
 
 export const LIVE_NETWORKS: iParamsPerNetwork<boolean> = {
@@ -109,6 +114,9 @@ export const LIVE_NETWORKS: iParamsPerNetwork<boolean> = {
   [eFantomNetwork.main]: true,
   [eOptimismNetwork.main]: true,
   [eBaseNetwork.base]: true,
+  [eOasisNetwork.sapphireTestnet]: true,
+  [eOasisNetwork.sapphireMainnet]: true,
+  [eOraiNetwork.oraiMainnet]: true,
 };
 
 const GAS_PRICE_PER_NET: iParamsPerNetwork<string | number> = {
@@ -149,14 +157,15 @@ export const getCommonNetworkConfig = (
   blockGasLimit: DEFAULT_BLOCK_GAS_LIMIT,
   chainId,
   gasPrice: GAS_PRICE_PER_NET[networkName] || undefined,
-  ...((!!MNEMONICS[networkName] || !!MNEMONIC) && {
-    accounts: {
-      mnemonic: MNEMONICS[networkName] || MNEMONIC,
-      path: MNEMONIC_PATH,
-      initialIndex: 0,
-      count: 10,
-    },
-  }),
+  // ...((!!MNEMONICS[networkName] || !!MNEMONIC) && {
+  //   accounts: {
+  //     mnemonic: MNEMONICS[networkName] || MNEMONIC,
+  //     path: MNEMONIC_PATH,
+  //     initialIndex: 0,
+  //     count: 10,
+  //   },
+  // }),
+  accounts: [process.env.PRIVATE_KEY_1, process.env.PRIVATE_KEY_2],
   live: LIVE_NETWORKS[networkName] || false,
 });
 

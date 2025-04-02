@@ -74,7 +74,7 @@ task(`review-rate-strategies`, ``)
           normalizedSymbol
         );
         const expectedStrategy: IInterestRateStrategyParams =
-          poolConfig.ReservesConfig[normalizedSymbol.toUpperCase()].strategy;
+          poolConfig.ReservesConfig[normalizedSymbol].strategy;
         const onChainStrategy = (await hre.ethers.getContractAt(
           "DefaultReserveInterestRateStrategy",
           await dataProvider.getInterestRateStrategyAddress(tokenAddress),

@@ -34,14 +34,15 @@ const func: DeployFunction = async function ({
     process.env.FORK ? process.env.FORK : hre.network.name
   ) as eNetwork;
 
-  if (isProductionMarket(poolConfig)) {
-    console.log("[NOTICE] Skipping deployment of testnet price aggregators");
-    return;
-  }
+  // if (isProductionMarket(poolConfig)) {
+  //   console.log("[NOTICE] Skipping deployment of testnet price aggregators");
+  //   return;
+  // }
 
   const reserves = await getReserveAddresses(poolConfig, network);
+  const priceOracleAddress_sapphireTestnet = "0x2300221C0719748D6322F24444e938C8873eb200";
 
-  let symbols = Object.keys(reserves);
+  let symbols = reserves ? Object.keys(reserves) : [];
 
   if (isIncentivesEnabled(poolConfig)) {
     const rewards = await getSymbolsByPrefix(TESTNET_REWARD_TOKEN_PREFIX);
@@ -50,19 +51,21 @@ const func: DeployFunction = async function ({
 
   // Iterate each token symbol and deploy a mock aggregator
   await Bluebird.each(symbols, async (symbol) => {
-    const price =
-      symbol === "StkAave"
-        ? MOCK_CHAINLINK_AGGREGATORS_PRICES["AAVE"]
-        : MOCK_CHAINLINK_AGGREGATORS_PRICES[symbol];
-    if (!price) {
-      throw `[ERROR] Missing mock price for asset ${symbol} at MOCK_CHAINLINK_AGGREGATORS_PRICES constant located at src/constants.ts`;
+    // const price =
+    //   symbol === "StkAave"
+    //     ? MOCK_CHAINLINK_AGGREGATORS_PRICES["AAVE"]
+    //     : MOCK_CHAINLINK_AGGREGATORS_PRICES[symbol];
+    // if (!price) {
+    //   throw `[ERROR] Missing mock price for asset ${symbol} at MOCK_CHAINLINK_AGGREGATORS_PRICES constant located at src/constants.ts`;
+    // }
+    if (reserves && reserves[symbol]) {
+      await deploy(`${symbol}${TESTNET_PRICE_AGGR_PREFIX}`, {
+        args: [priceOracleAddress_sapphireTestnet, reserves[symbol]],
+        from: deployer,
+        ...COMMON_DEPLOY_PARAMS,
+        contract: "PriceAggregator",
+      });
     }
-    await deploy(`${symbol}${TESTNET_PRICE_AGGR_PREFIX}`, {
-      args: [price],
-      from: deployer,
-      ...COMMON_DEPLOY_PARAMS,
-      contract: "MockAggregator",
-    });
   });
 
   return true;

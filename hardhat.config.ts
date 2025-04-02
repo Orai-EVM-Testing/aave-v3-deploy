@@ -15,6 +15,8 @@ import {
   eOptimismNetwork,
   ePolygonNetwork,
   eBaseNetwork,
+  eOasisNetwork,
+  eOraiNetwork,
 } from "./helpers/types";
 import { DEFAULT_NAMED_ACCOUNTS } from "./helpers/constants";
 
@@ -71,6 +73,9 @@ export default {
     kovan: getCommonNetworkConfig(eEthereumNetwork.kovan, 42),
     rinkeby: getCommonNetworkConfig(eEthereumNetwork.rinkeby, 4),
     ropsten: getCommonNetworkConfig(eEthereumNetwork.ropsten, 3),
+    sapphireTestnet: getCommonNetworkConfig(eOasisNetwork.sapphireTestnet, 0x5aff),
+    sapphireMainnet: getCommonNetworkConfig(eOasisNetwork.sapphireMainnet, 23294),
+    oraiMainnet: getCommonNetworkConfig(eOraiNetwork.oraiMainnet, 108160679),
     [ePolygonNetwork.polygon]: getCommonNetworkConfig(
       ePolygonNetwork.polygon,
       137
