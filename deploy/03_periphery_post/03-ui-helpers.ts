@@ -29,8 +29,12 @@ const { deployer } = await getNamedAccounts();
 //   return;
 // }
 
-const { address: addressChainlinkAggregatorProxy} = await deployments.get("WROSE-TestnetPriceAggregator-Sapphire");
-const {address: addressChainlinkEthUsdAggregatorProxy} = await deployments.get("USDC-TestnetPriceAggregator-Sapphire");
+// const { address: addressChainlinkAggregatorProxy} = await deployments.get("WROSE-TestnetPriceAggregator-Sapphire");
+// const {address: addressChainlinkEthUsdAggregatorProxy} = await deployments.get("USDC-TestnetPriceAggregator-Sapphire");
+
+const { address: addressChainlinkAggregatorProxy} = await deployments.get("WORAI-TestnetPriceAggregator-Orai");
+const {address: addressChainlinkEthUsdAggregatorProxy} = await deployments.get("USDC-TestnetPriceAggregator-Orai");
+
 // Deploy UiIncentiveDataProvider getter helper
 await deploy("UiIncentiveDataProviderV3", {
   from: deployer,

@@ -1,0 +1,114 @@
+{
+  "address": "0x5450BD4e3b0f8A8BCd3Bfe548491414029417456",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_priceOracle",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_token",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "decimals",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "latestAnswer",
+      "outputs": [
+        {
+          "internalType": "int256",
+          "name": "",
+          "type": "int256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0xf16f6b5a493f5f72bd54cec516db60e725c08787ddfc4c779a41efaae79f3f42",
+  "receipt": {
+    "to": null,
+    "from": "0x034a475e1b1F0a5ffD9b35D7cA09cE0f403784D4",
+    "contractAddress": "0x5450BD4e3b0f8A8BCd3Bfe548491414029417456",
+    "transactionIndex": 0,
+    "gasUsed": "196711",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0xe75235a0a0ce46b078148f04843aac1559977289bc63af49e2fa38dbb98ea2ec",
+    "transactionHash": "0xf16f6b5a493f5f72bd54cec516db60e725c08787ddfc4c779a41efaae79f3f42",
+    "logs": [],
+    "blockNumber": 55600131,
+    "cumulativeGasUsed": "290468",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [
+    "0xb0DfcC0Ee3a024dEB7753F49f1Cb0b0681489fda",
+    "0x61f7D076c96cE02A2f4CE62bF190963Dc56C8F3a"
+  ],
+  "numDeployments": 1,
+  "solcInputHash": "48447290e3b07878a9e16f6530c8943f",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.10+commit.fc410830\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_priceOracle\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"decimals\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"latestAnswer\",\"outputs\":[{\"internalType\":\"int256\",\"name\":\"\",\"type\":\"int256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/OraiPriceAggregator.sol\":\"OraiPriceAggregator\"},\"evmVersion\":\"berlin\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":100000},\"remappings\":[]},\"sources\":{\"contracts/AggregatorInterface.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\r\\npragma solidity ^0.8.0;\\r\\n\\r\\ninterface AggregatorInterface {\\r\\n  function latestAnswer() external view returns (int256);\\r\\n  function decimals() external view returns (uint256);\\r\\n}\",\"keccak256\":\"0xa7ad9f0949aea2d905fc00b2bf7116e3854fc4428d850775ca69fa7596128329\",\"license\":\"MIT\"},\"contracts/IPriceOracle.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\r\\npragma solidity ^0.8.0;\\r\\n\\r\\ninterface IPriceOracle {\\r\\n    function getPrice(address token) external view returns (uint256);\\r\\n}\\r\\n\\r\\ninterface IOldPriceOracle {\\r\\n    function getPrice(address token) external view returns (uint256, uint256);\\r\\n}\",\"keccak256\":\"0xf89af7c7a7ab8943e3e8501868414bb4d61f2789cb472b39ada02e7bdedc76e7\",\"license\":\"MIT\"},\"contracts/OraiPriceAggregator.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\r\\npragma solidity ^0.8.0;\\r\\nimport \\\"./AggregatorInterface.sol\\\";\\r\\nimport {IOldPriceOracle} from \\\"./IPriceOracle.sol\\\";\\r\\n\\r\\ncontract OraiPriceAggregator is AggregatorInterface {\\r\\n    IOldPriceOracle private priceOracle;\\r\\n    address private token;\\r\\n\\r\\n    constructor (address _priceOracle, address _token) {\\r\\n        priceOracle = IOldPriceOracle(_priceOracle);\\r\\n        token = _token;\\r\\n    }\\r\\n    function latestAnswer() external view returns (int256) {\\r\\n        (uint256 price, ) = priceOracle.getPrice(token);\\r\\n        return int256(price * 10**2); // decimals = 8\\r\\n    }\\r\\n    function decimals() external pure returns (uint256) {\\r\\n        return 8;\\r\\n    }\\r\\n}\",\"keccak256\":\"0x911860cd89d08c54617cb2ffaafb861f6fca3fccea5a2cf567df95e5f92146fc\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5060405161027c38038061027c83398101604081905261002f9161007c565b600080546001600160a01b039384166001600160a01b031991821617909155600180549290931691161790556100af565b80516001600160a01b038116811461007757600080fd5b919050565b6000806040838503121561008f57600080fd5b61009883610060565b91506100a660208401610060565b90509250929050565b6101be806100be6000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c8063313ce5671461003b57806350d25bcd14610050575b600080fd5b60085b60405190815260200160405180910390f35b600080546001546040517f41976e0900000000000000000000000000000000000000000000000000000000815273ffffffffffffffffffffffffffffffffffffffff918216600482015261003e9392839216906341976e09906024016040805180830381865afa1580156100c8573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906100ec9190610100565b5090506100fa816064610124565b91505090565b6000806040838503121561011357600080fd5b505080516020909101519092909150565b6000817fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0483118215151615610183577f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b50029056fea2646970667358221220b9d6b1909991cd9de7524ced118a523f47213e53b9bde91651ab55b7f72e416464736f6c634300080a0033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100365760003560e01c8063313ce5671461003b57806350d25bcd14610050575b600080fd5b60085b60405190815260200160405180910390f35b600080546001546040517f41976e0900000000000000000000000000000000000000000000000000000000815273ffffffffffffffffffffffffffffffffffffffff918216600482015261003e9392839216906341976e09906024016040805180830381865afa1580156100c8573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906100ec9190610100565b5090506100fa816064610124565b91505090565b6000806040838503121561011357600080fd5b505080516020909101519092909150565b6000817fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0483118215151615610183577f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b50029056fea2646970667358221220b9d6b1909991cd9de7524ced118a523f47213e53b9bde91651ab55b7f72e416464736f6c634300080a0033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 42,
+        "contract": "contracts/OraiPriceAggregator.sol:OraiPriceAggregator",
+        "label": "priceOracle",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_contract(IOldPriceOracle)32"
+      },
+      {
+        "astId": 44,
+        "contract": "contracts/OraiPriceAggregator.sol:OraiPriceAggregator",
+        "label": "token",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_address"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_contract(IOldPriceOracle)32": {
+        "encoding": "inplace",
+        "label": "contract IOldPriceOracle",
+        "numberOfBytes": "20"
+      }
+    }
+  }
+}

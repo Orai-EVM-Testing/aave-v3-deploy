@@ -51,7 +51,7 @@ export const strategyOCH = {
   borrowingEnabled: false,
   stableBorrowRateEnabled: false,
   flashLoanEnabled: false,
-  reserveDecimals: "18",
+  reserveDecimals: "6",
   aTokenImpl: eContractid.AToken,
   reserveFactor: "1000",
   supplyCap: "2000000000",

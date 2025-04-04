@@ -1,5 +1,5 @@
 import { deployments } from "hardhat";
-import { initializeMakeSuite } from "./utils/make-suite";
+import { initializeMakeSuite } from "./utils/make-suite-orai";
 
 before(async () => {
   // Deploy Aave Market as fixture

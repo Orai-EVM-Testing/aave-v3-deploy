@@ -44,16 +44,22 @@ const func: DeployFunction = async function ({
   const reserveAssets = await getReserveAddresses(poolConfig, network);
   // const chainlinkAggregators = await getChainlinkOracles(poolConfig, network);
 
-  const { address: USDTPriceAggregator} = await deployments.get("USDT-TestnetPriceAggregator-Sapphire");
-  const { address: USDCPriceAggregator} = await deployments.get("USDC-TestnetPriceAggregator-Sapphire");
-  const { address: WROSEPriceAggregator} = await deployments.get("WROSE-TestnetPriceAggregator-Sapphire");
-  const { address: stROSEPriceAggregator} = await deployments.get("stROSE-TestnetPriceAggregator-Sapphire");
+  // const { address: USDTPriceAggregator} = await deployments.get("USDT-TestnetPriceAggregator-Sapphire");
+  // const { address: USDCPriceAggregator} = await deployments.get("USDC-TestnetPriceAggregator-Sapphire");
+  // const { address: WROSEPriceAggregator} = await deployments.get("WROSE-TestnetPriceAggregator-Sapphire");
+  // const { address: stROSEPriceAggregator} = await deployments.get("stROSE-TestnetPriceAggregator-Sapphire");
+  const { address: OCHPriceAggregator} = await deployments.get("OCH-TestnetPriceAggregator-Orai");
+  const { address: WORAIPriceAggregator} = await deployments.get("WORAI-TestnetPriceAggregator-Orai");
+  const { address: USDCPriceAggregator} = await deployments.get("USDC-TestnetPriceAggregator-Orai");
 
   const chainlinkAggregators = {
-    USDT: USDTPriceAggregator,
+    OCH: OCHPriceAggregator,
+    WORAI: WORAIPriceAggregator,
     USDC: USDCPriceAggregator,
-    WROSE: WROSEPriceAggregator,
-    stROSE: stROSEPriceAggregator,
+    // USDT: USDTPriceAggregator,
+    // USDC: USDCPriceAggregator,
+    // WROSE: WROSEPriceAggregator,
+    // stROSE: stROSEPriceAggregator,
   }
   const [assets, sources] = getPairsTokenAggregator(
     reserveAssets as { [tokenSymbol: string]: string },

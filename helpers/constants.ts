@@ -9,6 +9,7 @@ import {
   eHarmonyNetwork,
   eOasisNetwork,
   eOptimismNetwork,
+  eOraiNetwork,
   ePolygonNetwork,
 } from "./types";
 
@@ -48,6 +49,7 @@ export const WRAPPED_NATIVE_TOKEN_PER_NETWORK: { [network: string]: string } = {
   [eHarmonyNetwork.main]: "0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a",
   [ePolygonNetwork.polygon]: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
   [eOasisNetwork.sapphireTestnet]: "0xB759a0fbc1dA517aF257D5Cf039aB4D86dFB3b94",
+  [eOraiNetwork.oraiMainnet]:"0xAa6d857CD1b0f4A03d589a81F645AB0ac8cFe96e"
 };
 
 export const ZERO_BYTES_32 =
@@ -148,6 +150,7 @@ export const POOL_ADMIN: Record<string, string> = {
   [eBaseNetwork.baseGoerli]: "0xA9F30e6ED4098e9439B2ac8aEA2d3fc26BcEbb45",
   [eEthereumNetwork.tenderly]: ETHEREUM_SHORT_EXECUTOR,
   [eOasisNetwork.sapphireTestnet]: "0x59561De9105c079cC0c5592075fca43672b78fF1",
+  [eOraiNetwork.oraiMainnet]:"0x034a475e1b1F0a5ffD9b35D7cA09cE0f403784D4"
 };
 
 export const EMERGENCY_ADMIN: Record<string, string> = {

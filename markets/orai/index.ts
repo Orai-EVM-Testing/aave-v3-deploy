@@ -34,7 +34,7 @@ import {
       [eOraiNetwork.oraiMainnet]: {
         USDC: "0x1947b853aD7bFc987D91DDB26fddEABC100C5070",
         WORAI: "0xAa6d857CD1b0f4A03d589a81F645AB0ac8cFe96e",
-        OCH: "0x7F52cD5870Cee34f4e1Ef329397A4e05b752B2c5",
+        OCH: "0x61f7D076c96cE02A2f4CE62bF190963Dc56C8F3a",
       },
     },
   };

@@ -41,6 +41,7 @@ const func: DeployFunction = async function ({
 
   const reserves = await getReserveAddresses(poolConfig, network);
   const priceOracleAddress_sapphireTestnet = "0x2300221C0719748D6322F24444e938C8873eb200";
+  const priceOracleAddress_oraiMainnet = "0xb0DfcC0Ee3a024dEB7753F49f1Cb0b0681489fda";
 
 
   let symbols = reserves ? Object.keys(reserves) : [];
@@ -61,10 +62,11 @@ const func: DeployFunction = async function ({
     // }
     if (reserves && reserves[symbol]) {
       await deploy(`${symbol}${TESTNET_PRICE_AGGR_PREFIX}`, {
-        args: [priceOracleAddress_sapphireTestnet, reserves[symbol]],
+        args: [priceOracleAddress_oraiMainnet, reserves[symbol]],
         from: deployer,
         ...COMMON_DEPLOY_PARAMS,
-        contract: "PriceAggregator",
+        // contract: "PriceAggregator",
+        contract: "OraiPriceAggregator",
       });
     }
   });

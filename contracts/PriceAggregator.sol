@@ -16,7 +16,7 @@ contract PriceAggregator is AggregatorInterface {
         return int256(price); // decimals = 8
     }
 
-    function decimals() external pure returns (uint8) {
+    function decimals() external pure returns (uint256) {
         return 8;
     }
 }
