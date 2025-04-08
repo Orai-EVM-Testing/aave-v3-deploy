@@ -25,12 +25,12 @@ export const SapphireMarket: IAaveConfiguration = {
   ...CommonsConfig,
   MarketId: "Sapphire Market",
   TestnetMarket: false,
-  ProviderId: 23295,
+  ProviderId: 1,
   ReservesConfig: {
     USDC: strategyUSDC,
-    USDT: strategyUSDT,
+    // USDT: strategyUSDT,
     WROSE: strategyWROSE,
-    stROSE: strategystROSE,
+    // stROSE: strategystROSE,
   },
   ReserveAssets: {
     [eOasisNetwork.sapphireTestnet]: {
@@ -39,6 +39,10 @@ export const SapphireMarket: IAaveConfiguration = {
       WROSE: "0xB759a0fbc1dA517aF257D5Cf039aB4D86dFB3b94",
       stROSE: "0xf001eb69fd0b4060db7397d70ec2edcd5d89cb27",
     },
+    [eOasisNetwork.sapphireMainnet]: {
+      USDC: "0x97eec1c29f745dC7c267F90292AA663d997a601D",
+      WROSE: "0x8Bc2B030b299964eEfb5e1e0b36991352E56D2D3",
+    }
   },
 };
 

@@ -12,5 +12,6 @@
   "Incentives:Orai:aave-v3-periphery@2.5.2": 1743652855,
   "TokenImplementations:Orai:aave-v3-core@1.19.3": 1743652939,
   "ReservesInit:Orai:aave-v3-core@1.19.3": 1743653010,
-  "PeripheryInit:Orai:aave-v3-periphery@2.5.2": 1743653010
+  "PeripheryInit:Orai:aave-v3-periphery@2.5.2": 1743653010,
+  "Multicall2": 1744080839
 }

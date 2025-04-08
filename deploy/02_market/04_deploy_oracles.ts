@@ -48,17 +48,21 @@ const func: DeployFunction = async function ({
   // const { address: USDCPriceAggregator} = await deployments.get("USDC-TestnetPriceAggregator-Sapphire");
   // const { address: WROSEPriceAggregator} = await deployments.get("WROSE-TestnetPriceAggregator-Sapphire");
   // const { address: stROSEPriceAggregator} = await deployments.get("stROSE-TestnetPriceAggregator-Sapphire");
-  const { address: OCHPriceAggregator} = await deployments.get("OCH-TestnetPriceAggregator-Orai");
-  const { address: WORAIPriceAggregator} = await deployments.get("WORAI-TestnetPriceAggregator-Orai");
-  const { address: USDCPriceAggregator} = await deployments.get("USDC-TestnetPriceAggregator-Orai");
+
+  // const { address: OCHPriceAggregator} = await deployments.get("OCH-TestnetPriceAggregator-Orai");
+  // const { address: WORAIPriceAggregator} = await deployments.get("WORAI-TestnetPriceAggregator-Orai");
+  // const { address: USDCPriceAggregator} = await deployments.get("USDC-TestnetPriceAggregator-Orai");
+
+  const { address: USDCPriceAggregator} = await deployments.get("USDC-MainnetPriceAggregator-Sapphire");
+  const { address: WROSEPriceAggregator} = await deployments.get("WROSE-MainnetPriceAggregator-Sapphire");
 
   const chainlinkAggregators = {
-    OCH: OCHPriceAggregator,
-    WORAI: WORAIPriceAggregator,
+    // OCH: OCHPriceAggregator,
+    // WORAI: WORAIPriceAggregator,
     USDC: USDCPriceAggregator,
     // USDT: USDTPriceAggregator,
     // USDC: USDCPriceAggregator,
-    // WROSE: WROSEPriceAggregator,
+    WROSE: WROSEPriceAggregator,
     // stROSE: stROSEPriceAggregator,
   }
   const [assets, sources] = getPairsTokenAggregator(
