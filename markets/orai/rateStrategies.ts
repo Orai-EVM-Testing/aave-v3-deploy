@@ -3,7 +3,7 @@ import { IInterestRateStrategyParams } from "../../helpers/types";
 
 export const rateStrategyVolatileOne = {
   name: "rateStrategyVolatileOne",
-  optimalUsageRatio: parseUnits("0.45", 27).toString(),
+  optimalUsageRatio: parseUnits("0.8", 27).toString(),
   baseVariableBorrowRate: "0",
   variableRateSlope1: parseUnits("0.07", 27).toString(),
   variableRateSlope2: parseUnits("3", 27).toString(),
