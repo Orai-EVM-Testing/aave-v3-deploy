@@ -225,7 +225,7 @@ import {
   
   
     const aUsdcAddress = allTokens.find(
-      (aToken) => aToken.symbol === "aoraiUSDC"
+      (aToken) => aToken.symbol === "aoraiUSDT"
     )?.tokenAddress;
   
     const aWoraiAddress = allTokens.find(
@@ -233,7 +233,7 @@ import {
     )?.tokenAddress;
     
     const usdcAddress = reservesTokens.find(
-      (token) => token.symbol === "USDC"
+      (token) => token.symbol === "USDT"
     )?.tokenAddress;
   
     const woraiAddress = reservesTokens.find(

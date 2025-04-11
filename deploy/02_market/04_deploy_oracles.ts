@@ -53,16 +53,19 @@ const func: DeployFunction = async function ({
   // const { address: WORAIPriceAggregator} = await deployments.get("WORAI-TestnetPriceAggregator-Orai");
   // const { address: USDCPriceAggregator} = await deployments.get("USDC-TestnetPriceAggregator-Orai");
 
-  const { address: USDCPriceAggregator} = await deployments.get("USDC-MainnetPriceAggregator-Sapphire");
-  const { address: WROSEPriceAggregator} = await deployments.get("WROSE-MainnetPriceAggregator-Sapphire");
+  // const { address: USDCPriceAggregator} = await deployments.get("USDC-MainnetPriceAggregator-Sapphire");
+  // const { address: WROSEPriceAggregator} = await deployments.get("WROSE-MainnetPriceAggregator-Sapphire");
+
+  const { address: WORAIPriceAggregator} = await deployments.get("WORAI-TestnetPriceAggregator-Orai");
+  const { address: USDTPriceAggregator} = await deployments.get("USDT-TestnetPriceAggregator-Orai");
 
   const chainlinkAggregators = {
     // OCH: OCHPriceAggregator,
-    // WORAI: WORAIPriceAggregator,
-    USDC: USDCPriceAggregator,
-    // USDT: USDTPriceAggregator,
+    WORAI: WORAIPriceAggregator,
     // USDC: USDCPriceAggregator,
-    WROSE: WROSEPriceAggregator,
+    USDT: USDTPriceAggregator,
+    // USDC: USDCPriceAggregator,
+    // WROSE: WROSEPriceAggregator,
     // stROSE: stROSEPriceAggregator,
   }
   const [assets, sources] = getPairsTokenAggregator(

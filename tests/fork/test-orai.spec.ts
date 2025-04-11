@@ -11,21 +11,21 @@ const { expect } = require("chai");
 makeSuite("Mainnet Check list", (testEnv: TestEnv) => {
   const zero = BigNumber.from("0");
 
-  // it("Check price", async () => {
-  //   const { worai, usdc, oracle } = testEnv;
+  it("Check price", async () => {
+    const { worai, usdc, oracle } = testEnv;
 
-  //   const priceworai = await oracle.getAssetPrice(worai.address);
-  //   const priceUsdc = await oracle.getAssetPrice(usdc.address);
-  //   console.log("priceworai", priceworai.toString());
-  //   console.log("priceUsdc", priceUsdc.toString());
-  // });
+    const priceworai = await oracle.getAssetPrice(worai.address);
+    const priceUsdc = await oracle.getAssetPrice(usdc.address);
+    console.log("priceworai", priceworai.toString());
+    console.log("priceUsdc", priceUsdc.toString());
+  });
 
   // it("Supply worai", async () => {
   //   const { users, wrappedTokenGateway, aWorai, pool} = testEnv;
 
   //   const user = users[0];
 
-  //   const depositSize = parseEther("0.0001");
+  //   const depositSize = parseEther("10");
 
   //   // Deposit with native ETH 
   //   await wrappedTokenGateway
@@ -61,19 +61,19 @@ makeSuite("Mainnet Check list", (testEnv: TestEnv) => {
   //     await pool.connect(user.signer).supply(usdc.address, depositSize, user.address, "0")
   //   )
 
-  //   await waitForTx(
-  //     await usdc.connect(user2.signer).mint(user2.address, depositSize)
-  //   )
+  //   // await waitForTx(
+  //   //   await usdc.connect(user2.signer).mint(user2.address, depositSize)
+  //   // )
     
-  //   console.log(await usdc.balanceOf(user2.address))
+  //   // console.log(await usdc.balanceOf(user2.address))
 
-  //   await waitForTx(
-  //     await usdc.connect(user2.signer).approve(pool.address, MAX_UINT_AMOUNT)
-  //   )
+  //   // await waitForTx(
+  //   //   await usdc.connect(user2.signer).approve(pool.address, MAX_UINT_AMOUNT)
+  //   // )
     
-  //   await waitForTx(
-  //     await pool.connect(user2.signer).supply(usdc.address, depositSize, user2.address, "0")
-  //   )  
+  //   // await waitForTx(
+  //   //   await pool.connect(user2.signer).supply(usdc.address, depositSize, user2.address, "0")
+  //   // )  
 
   //   const aTokensBalance = await aUsdc.balanceOf(user.address);
   //   expect(aTokensBalance).to.be.equal(depositSize);
@@ -129,7 +129,7 @@ makeSuite("Mainnet Check list", (testEnv: TestEnv) => {
     const { users, usdc, pool, helpersContract, uiPoolDataProvider, addressesProvider, walletBalanceProvider } =
       testEnv;
 
-    const borrowSize = await parseUnitsFromToken(usdc.address, "10");
+    const borrowSize = await parseUnitsFromToken(usdc.address, "30");
     const user = users[0];
 
     const { variableDebtTokenAddress } =

@@ -43,6 +43,7 @@ const func: DeployFunction = async function ({
   const priceOracleAddress_sapphireTestnet = "0x2300221C0719748D6322F24444e938C8873eb200";
   const priceOracleAddress_sapphireMainnet = "0x26eEaD16064cF7F24c90Cceb4bFEB23E8e7ad4e4";
   const priceOracleAddress_oraiMainnet = "0xb0DfcC0Ee3a024dEB7753F49f1Cb0b0681489fda";
+  const priceOracleAddress_oraiTestnet = "0x1947b853aD7bFc987D91DDB26fddEABC100C5070";
 
 
   let symbols = reserves ? Object.keys(reserves) : [];
@@ -62,12 +63,12 @@ const func: DeployFunction = async function ({
     //   throw `[ERROR] Missing mock price for asset ${symbol} at MOCK_CHAINLINK_AGGREGATORS_PRICES constant located at src/constants.ts`;
     // }
     if (reserves && reserves[symbol]) {
-      await deploy(`${symbol}${MAINNET_PRICE_AGGR_PREFIX}`, {
-        args: [priceOracleAddress_sapphireMainnet, reserves[symbol]],
+      await deploy(`${symbol}${TESTNET_PRICE_AGGR_PREFIX}`, {
+        args: [priceOracleAddress_oraiTestnet, reserves[symbol]],
         from: deployer,
         ...COMMON_DEPLOY_PARAMS,
-        contract: "PriceAggregator",
-        // contract: "OraiPriceAggregator",
+        // contract: "PriceAggregator",
+        contract: "OraiPriceAggregator",
       });
     }
   });

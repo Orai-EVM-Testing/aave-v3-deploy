@@ -76,6 +76,7 @@ export default {
     sapphireTestnet: getCommonNetworkConfig(eOasisNetwork.sapphireTestnet, 0x5aff),
     sapphireMainnet: getCommonNetworkConfig(eOasisNetwork.sapphireMainnet, 23294),
     oraiMainnet: getCommonNetworkConfig(eOraiNetwork.oraiMainnet, 108160679),
+    oraiTestnet: getCommonNetworkConfig(eOraiNetwork.oraiTestnet, 4143398064),
     [ePolygonNetwork.polygon]: getCommonNetworkConfig(
       ePolygonNetwork.polygon,
       137

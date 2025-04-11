@@ -103,6 +103,7 @@ export const NETWORKS_RPC_URL: iParamsPerNetwork<string> = {
   [eOasisNetwork.sapphireTestnet]: `https://testnet.sapphire.oasis.dev`,
   [eOasisNetwork.sapphireMainnet]: `https://sapphire.oasis.io/`,
   [eOraiNetwork.oraiMainnet]: `https://evm.orai.io`,
+  [eOraiNetwork.oraiTestnet]: `https://testnet-v2.evm.orai.io/`,
 };
 
 export const LIVE_NETWORKS: iParamsPerNetwork<boolean> = {
@@ -117,6 +118,7 @@ export const LIVE_NETWORKS: iParamsPerNetwork<boolean> = {
   [eOasisNetwork.sapphireTestnet]: true,
   [eOasisNetwork.sapphireMainnet]: true,
   [eOraiNetwork.oraiMainnet]: true,
+  [eOraiNetwork.oraiTestnet]: true,
 };
 
 const GAS_PRICE_PER_NET: iParamsPerNetwork<string | number> = {

@@ -32,11 +32,11 @@ const { deployer } = await getNamedAccounts();
 // const { address: addressChainlinkAggregatorProxy} = await deployments.get("WROSE-TestnetPriceAggregator-Sapphire");
 // const {address: addressChainlinkEthUsdAggregatorProxy} = await deployments.get("USDC-TestnetPriceAggregator-Sapphire");
 
-// const { address: addressChainlinkAggregatorProxy} = await deployments.get("WORAI-TestnetPriceAggregator-Orai");
-// const {address: addressChainlinkEthUsdAggregatorProxy} = await deployments.get("USDC-TestnetPriceAggregator-Orai");
+const { address: addressChainlinkAggregatorProxy} = await deployments.get("WORAI-TestnetPriceAggregator-Orai");
+const {address: addressChainlinkEthUsdAggregatorProxy} = await deployments.get("USDT-TestnetPriceAggregator-Orai");
 
-const { address: addressChainlinkAggregatorProxy} = await deployments.get("WROSE-MainnetPriceAggregator-Sapphire");
-const {address: addressChainlinkEthUsdAggregatorProxy} = await deployments.get("USDC-MainnetPriceAggregator-Sapphire");
+// const { address: addressChainlinkAggregatorProxy} = await deployments.get("WROSE-MainnetPriceAggregator-Sapphire");
+// const {address: addressChainlinkEthUsdAggregatorProxy} = await deployments.get("USDC-MainnetPriceAggregator-Sapphire");
 
 // Deploy UiIncentiveDataProvider getter helper
 await deploy("UiIncentiveDataProviderV3", {
