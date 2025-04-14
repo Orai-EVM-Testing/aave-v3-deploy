@@ -37,7 +37,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const reservesConfig = poolConfig.ReservesConfig;
 
   const reserveConfigSymbols = Object.keys(reservesConfig);
-  const reserveSymbols = Object.keys(reserves);
+  const reserveSymbols = reserves ? Object.keys(reserves) : [];
 
   if (!containsSameMembers(reserveConfigSymbols, reserveSymbols)) {
     console.log(reserveConfigSymbols);
@@ -51,7 +51,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   }
   for (let y = 0; y < reserveSymbols.length; y++) {
     if (
-      !reserves[reserveSymbols[y]] ||
+      !reserves?.[reserveSymbols[y]] ||
       getAddress(reserves[reserveSymbols[y]]) === ZERO_ADDRESS
     ) {
       throw `[Deployment][Error] Missing token ${reserveSymbols[y]} ReserveAssets configuration`;

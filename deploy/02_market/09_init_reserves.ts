@@ -76,8 +76,8 @@ const func: DeployFunction = async function ({
   const incentivesController = await deployments.get("IncentivesProxy");
   const reservesAddresses = await getReserveAddresses(poolConfig, network);
 
-  if (Object.keys(reservesAddresses).length == 0) {
-    console.warn("[WARNING] Skipping initialization. Empty asset list.");
+  if (!reservesAddresses || Object.keys(reservesAddresses).length == 0) {
+    console.warn("[WARNING] Skipping initialization. Empty or undefined asset list.");
     return;
   }
 
