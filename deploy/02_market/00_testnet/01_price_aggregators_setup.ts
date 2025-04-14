@@ -41,6 +41,7 @@ const func: DeployFunction = async function ({
 
   let priceOracleAddress;
   let contractToDeploy;
+  let prefix;
 
   const reserves = await getReserveAddresses(poolConfig, network);
   const priceOracleAddress_sapphireTestnet = "0x2300221C0719748D6322F24444e938C8873eb200";
@@ -52,14 +53,22 @@ const func: DeployFunction = async function ({
     case "oraiMainnet":
       priceOracleAddress = priceOracleAddress_oraiMainnet;
       contractToDeploy = "OraiPriceAggregator";
+      prefix = MAINNET_PRICE_AGGR_PREFIX;
       break;
     case "sapphireTestnet":
       priceOracleAddress = priceOracleAddress_sapphireTestnet;
       contractToDeploy = "PriceAggregator";
+      prefix = TESTNET_PRICE_AGGR_PREFIX;
       break;
     case "sapphireMainnet":
       priceOracleAddress = priceOracleAddress_sapphireMainnet;
       contractToDeploy = "PriceAggregator";
+      prefix = MAINNET_PRICE_AGGR_PREFIX;
+      break;
+    case "oraiTestnet":
+      priceOracleAddress = priceOracleAddress_oraiTestnet;
+      contractToDeploy = "OraiPriceAggregator";
+      prefix = TESTNET_PRICE_AGGR_PREFIX;
       break;
     default:
       throw new Error(`Unsupported network: ${network}`);
@@ -82,7 +91,7 @@ const func: DeployFunction = async function ({
     //   throw `[ERROR] Missing mock price for asset ${symbol} at MOCK_CHAINLINK_AGGREGATORS_PRICES constant located at src/constants.ts`;
     // }
     if (reserves && reserves[symbol]) {
-      await deploy(`${symbol}${MAINNET_PRICE_AGGR_PREFIX}`, {
+      await deploy(`${symbol}${prefix}`, {
         args: [priceOracleAddress, reserves[symbol]],
         from: deployer,
         ...COMMON_DEPLOY_PARAMS,

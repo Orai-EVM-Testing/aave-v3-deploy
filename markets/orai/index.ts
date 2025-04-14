@@ -26,7 +26,7 @@ import {
     MarketId: "Orai Market",
     ProviderId: 23295,
     TestnetMarket: false,
-    ReservesConfig: {
+    ReservesConfig: { // comment or uncomment reserves corresponding to the network
       // USDC: strategyUSDC,
       WORAI: strategyWORAI,
       USDT: strategyUSDT,

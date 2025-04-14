@@ -6,8 +6,10 @@ import { COMMON_DEPLOY_PARAMS } from "../../helpers/env";
 import { V3_CORE_VERSION, ZERO_ADDRESS } from "../../helpers/constants";
 import {
   FALLBACK_ORACLE_ID,
+  MAINNET_PRICE_AGGR_PREFIX,
   ORACLE_ID,
   POOL_ADDRESSES_PROVIDER_ID,
+  TESTNET_PRICE_AGGR_PREFIX,
 } from "../../helpers/deploy-ids";
 import {
   loadPoolConfig,
@@ -46,35 +48,33 @@ const func: DeployFunction = async function ({
 
   let deployedAggregators;
   if (network === "oraiTestnet") {
-    const { address: OCHPriceAggregator} = await deployments.get("OCH-TestnetPriceAggregator-Orai");
-    const { address: WORAIPriceAggregator} = await deployments.get("WORAI-TestnetPriceAggregator-Orai");
-    const { address: USDCPriceAggregator} = await deployments.get("USDC-TestnetPriceAggregator-Orai");
     deployedAggregators = {
-      OCH: OCHPriceAggregator,
-      WORAI: WORAIPriceAggregator,
-      USDC: USDCPriceAggregator,
+      WORAI: (await deployments.get(`WORAI-${TESTNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address,
+      USDT: (await deployments.get(`USDT-${TESTNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address,
     }
   }
 
   if (network === "sapphireMainnet") {
-    const { address: USDCPriceAggregator} = await deployments.get("USDC-MainnetPriceAggregator-Sapphire");
-    const { address: WROSEPriceAggregator} = await deployments.get("WROSE-MainnetPriceAggregator-Sapphire");
     deployedAggregators = {
-      USDC: USDCPriceAggregator,
-      WROSE: WROSEPriceAggregator,
+      USDC: (await deployments.get(`USDC-${MAINNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address,
+      WROSE: (await deployments.get(`WROSE-${MAINNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address,
     }
   }
 
   if (network === "sapphireTestnet") {
-    const { address: USDTPriceAggregator} = await deployments.get("USDT-TestnetPriceAggregator-Sapphire");
-    const { address: USDCPriceAggregator} = await deployments.get("USDC-TestnetPriceAggregator-Sapphire");
-    const { address: WROSEPriceAggregator} = await deployments.get("WROSE-TestnetPriceAggregator-Sapphire");
-    const { address: stROSEPriceAggregator} = await deployments.get("stROSE-TestnetPriceAggregator-Sapphire");
     deployedAggregators = {
-      USDC: USDCPriceAggregator,
-      USDT: USDTPriceAggregator,
-      WROSE: WROSEPriceAggregator,
-      stROSE: stROSEPriceAggregator,
+      USDC: (await deployments.get(`USDC-${TESTNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address,
+      USDT: (await deployments.get(`USDT-${TESTNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address,
+      WROSE: (await deployments.get(`WROSE-${TESTNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address,
+      stROSE: (await deployments.get(`stROSE-${TESTNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address,
+    }
+  }
+
+  if (network === "oraiMainnet") {
+    deployedAggregators = {
+      OCH: (await deployments.get(`OCH-${MAINNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address,
+      WORAI: (await deployments.get(`WORAI-${MAINNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address,
+      USDC: (await deployments.get(`USDC-${MAINNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address,
     }
   }
 

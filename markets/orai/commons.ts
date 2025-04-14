@@ -51,7 +51,7 @@ export const CommonsConfig: ICommonConfiguration = {
       liquidationThreshold: "9750",
       liquidationBonus: "10100",
       label: "Stablecoins",
-      assets: ["USDT"],
+      assets: ["USDT"], // or USDC for oraiMainnet
     },
   },
   ParaswapRegistry: {

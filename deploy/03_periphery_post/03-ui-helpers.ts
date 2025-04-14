@@ -1,7 +1,8 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
-import { COMMON_DEPLOY_PARAMS } from "../../helpers/env";
+import { COMMON_DEPLOY_PARAMS, MARKET_NAME } from "../../helpers/env";
 import {
+  MAINNET_PRICE_AGGR_PREFIX,
 TESTNET_PRICE_AGGR_PREFIX
 } from "../../helpers/deploy-ids";
 import {
@@ -31,19 +32,24 @@ const network = (
 
 let addressChainlinkAggregatorProxy, addressChainlinkEthUsdAggregatorProxy;
 
-if (network === "sapphireTestnet") {
-  addressChainlinkAggregatorProxy = await deployments.get("WROSE-TestnetPriceAggregator-Sapphire");
-  addressChainlinkEthUsdAggregatorProxy = await deployments.get("USDC-TestnetPriceAggregator-Sapphire");
+if (network === "sapphireTestnet" ) {
+  addressChainlinkAggregatorProxy = (await deployments.get(`WROSE-${TESTNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address;
+  addressChainlinkEthUsdAggregatorProxy = (await deployments.get(`USDC-${TESTNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address;
 }
 
 if (network === "sapphireMainnet") {
-  addressChainlinkAggregatorProxy = await deployments.get("WROSE-MainnetPriceAggregator-Sapphire");
-  addressChainlinkEthUsdAggregatorProxy = await deployments.get("USDC-MainnetPriceAggregator-Sapphire");
+  addressChainlinkAggregatorProxy = (await deployments.get(`WROSE-${MAINNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address;
+  addressChainlinkEthUsdAggregatorProxy = (await deployments.get(`USDC-${MAINNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address;
 }
 
 if (network === "oraiTestnet") {
-  addressChainlinkAggregatorProxy = await deployments.get("WORAI-TestnetPriceAggregator-Orai");
-  addressChainlinkEthUsdAggregatorProxy = await deployments.get("USDC-TestnetPriceAggregator-Orai");
+  addressChainlinkAggregatorProxy = (await deployments.get(`WORAI-${TESTNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address;
+  addressChainlinkEthUsdAggregatorProxy = (await deployments.get(`USDT-${TESTNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address;
+}
+
+if (network === "oraiMainnet") {
+  addressChainlinkAggregatorProxy = (await deployments.get(`WORAI-${MAINNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address;
+  addressChainlinkEthUsdAggregatorProxy = (await deployments.get(`usdc-${MAINNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address;
 }
 
 // Deploy UiIncentiveDataProvider getter helper
