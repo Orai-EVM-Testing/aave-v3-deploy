@@ -50,7 +50,8 @@ export const WRAPPED_NATIVE_TOKEN_PER_NETWORK: { [network: string]: string } = {
   [ePolygonNetwork.polygon]: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
   [eOasisNetwork.sapphireTestnet]: "0xB759a0fbc1dA517aF257D5Cf039aB4D86dFB3b94",
   [eOasisNetwork.sapphireMainnet]: "0x8Bc2B030b299964eEfb5e1e0b36991352E56D2D3",
-  [eOraiNetwork.oraiMainnet]:"0xAa6d857CD1b0f4A03d589a81F645AB0ac8cFe96e"
+  [eOraiNetwork.oraiMainnet]:"0xAa6d857CD1b0f4A03d589a81F645AB0ac8cFe96e",
+  [eOraiNetwork.oraiTestnet]: "0x17Edcb75DD3EfF0FFf7635d6f18c133681543fAF",
 };
 
 export const ZERO_BYTES_32 =
@@ -153,6 +154,7 @@ export const POOL_ADMIN: Record<string, string> = {
   [eOasisNetwork.sapphireTestnet]: "0x59561De9105c079cC0c5592075fca43672b78fF1",
   [eOasisNetwork.sapphireMainnet]: "0xa4F816D2f1801051484AeF1fD8e1e4e59C6Bf76F",
   [eOraiNetwork.oraiMainnet]:"0x034a475e1b1F0a5ffD9b35D7cA09cE0f403784D4",
+  [eOraiNetwork.oraiTestnet]: "0x17Edcb75DD3EfF0FFf7635d6f18c133681543fAF",
 };
 
 export const EMERGENCY_ADMIN: Record<string, string> = {
