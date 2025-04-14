@@ -18,9 +18,9 @@ deployments,
 const { deploy } = deployments;
 const { deployer } = await getNamedAccounts();
 
-// const network = (
-//   process.env.FORK ? process.env.FORK : hre.network.name
-// ) as eNetwork;
+const network = (
+  process.env.FORK ? process.env.FORK : hre.network.name
+) as eNetwork;
 
 // if (!chainlinkAggregatorProxy[network]) {
 //   console.log(
@@ -29,19 +29,31 @@ const { deployer } = await getNamedAccounts();
 //   return;
 // }
 
-// const { address: addressChainlinkAggregatorProxy} = await deployments.get("WROSE-TestnetPriceAggregator-Sapphire");
-// const {address: addressChainlinkEthUsdAggregatorProxy} = await deployments.get("USDC-TestnetPriceAggregator-Sapphire");
+let addressChainlinkAggregatorProxy, addressChainlinkEthUsdAggregatorProxy;
 
-// const { address: addressChainlinkAggregatorProxy} = await deployments.get("WORAI-TestnetPriceAggregator-Orai");
-// const {address: addressChainlinkEthUsdAggregatorProxy} = await deployments.get("USDC-TestnetPriceAggregator-Orai");
+if (network === "sapphireTestnet") {
+  addressChainlinkAggregatorProxy = await deployments.get("WROSE-TestnetPriceAggregator-Sapphire");
+  addressChainlinkEthUsdAggregatorProxy = await deployments.get("USDC-TestnetPriceAggregator-Sapphire");
+}
 
-const { address: addressChainlinkAggregatorProxy} = await deployments.get("WROSE-MainnetPriceAggregator-Sapphire");
-const {address: addressChainlinkEthUsdAggregatorProxy} = await deployments.get("USDC-MainnetPriceAggregator-Sapphire");
+if (network === "sapphireMainnet") {
+  addressChainlinkAggregatorProxy = await deployments.get("WROSE-MainnetPriceAggregator-Sapphire");
+  addressChainlinkEthUsdAggregatorProxy = await deployments.get("USDC-MainnetPriceAggregator-Sapphire");
+}
+
+if (network === "oraiTestnet") {
+  addressChainlinkAggregatorProxy = await deployments.get("WORAI-TestnetPriceAggregator-Orai");
+  addressChainlinkEthUsdAggregatorProxy = await deployments.get("USDC-TestnetPriceAggregator-Orai");
+}
 
 // Deploy UiIncentiveDataProvider getter helper
 await deploy("UiIncentiveDataProviderV3", {
   from: deployer,
 });
+
+if (!addressChainlinkAggregatorProxy || !addressChainlinkEthUsdAggregatorProxy) {
+  throw new Error("Missing addressChainlinkAggregatorProxy or addressChainlinkEthUsdAggregatorProxy");
+}
 
 // Deploy UiPoolDataProvider getter helper
 await deploy("UiPoolDataProviderV3", {

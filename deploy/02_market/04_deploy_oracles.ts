@@ -44,30 +44,46 @@ const func: DeployFunction = async function ({
   const reserveAssets = await getReserveAddresses(poolConfig, network);
   // const chainlinkAggregators = await getChainlinkOracles(poolConfig, network);
 
-  // const { address: USDTPriceAggregator} = await deployments.get("USDT-TestnetPriceAggregator-Sapphire");
-  // const { address: USDCPriceAggregator} = await deployments.get("USDC-TestnetPriceAggregator-Sapphire");
-  // const { address: WROSEPriceAggregator} = await deployments.get("WROSE-TestnetPriceAggregator-Sapphire");
-  // const { address: stROSEPriceAggregator} = await deployments.get("stROSE-TestnetPriceAggregator-Sapphire");
+  let deployedAggregators;
+  if (network === "oraiTestnet") {
+    const { address: OCHPriceAggregator} = await deployments.get("OCH-TestnetPriceAggregator-Orai");
+    const { address: WORAIPriceAggregator} = await deployments.get("WORAI-TestnetPriceAggregator-Orai");
+    const { address: USDCPriceAggregator} = await deployments.get("USDC-TestnetPriceAggregator-Orai");
+    deployedAggregators = {
+      OCH: OCHPriceAggregator,
+      WORAI: WORAIPriceAggregator,
+      USDC: USDCPriceAggregator,
+    }
+  }
 
-  // const { address: OCHPriceAggregator} = await deployments.get("OCH-TestnetPriceAggregator-Orai");
-  // const { address: WORAIPriceAggregator} = await deployments.get("WORAI-TestnetPriceAggregator-Orai");
-  // const { address: USDCPriceAggregator} = await deployments.get("USDC-TestnetPriceAggregator-Orai");
+  if (network === "sapphireMainnet") {
+    const { address: USDCPriceAggregator} = await deployments.get("USDC-MainnetPriceAggregator-Sapphire");
+    const { address: WROSEPriceAggregator} = await deployments.get("WROSE-MainnetPriceAggregator-Sapphire");
+    deployedAggregators = {
+      USDC: USDCPriceAggregator,
+      WROSE: WROSEPriceAggregator,
+    }
+  }
 
-  const { address: USDCPriceAggregator} = await deployments.get("USDC-MainnetPriceAggregator-Sapphire");
-  const { address: WROSEPriceAggregator} = await deployments.get("WROSE-MainnetPriceAggregator-Sapphire");
+  if (network === "sapphireTestnet") {
+    const { address: USDTPriceAggregator} = await deployments.get("USDT-TestnetPriceAggregator-Sapphire");
+    const { address: USDCPriceAggregator} = await deployments.get("USDC-TestnetPriceAggregator-Sapphire");
+    const { address: WROSEPriceAggregator} = await deployments.get("WROSE-TestnetPriceAggregator-Sapphire");
+    const { address: stROSEPriceAggregator} = await deployments.get("stROSE-TestnetPriceAggregator-Sapphire");
+    deployedAggregators = {
+      USDC: USDCPriceAggregator,
+      USDT: USDTPriceAggregator,
+      WROSE: WROSEPriceAggregator,
+      stROSE: stROSEPriceAggregator,
+    }
+  }
 
-  const chainlinkAggregators = {
-    // OCH: OCHPriceAggregator,
-    // WORAI: WORAIPriceAggregator,
-    USDC: USDCPriceAggregator,
-    // USDT: USDTPriceAggregator,
-    // USDC: USDCPriceAggregator,
-    WROSE: WROSEPriceAggregator,
-    // stROSE: stROSEPriceAggregator,
+  if (!deployedAggregators) {
+    throw new Error("Deployed aggregators are undefined for the current network.");
   }
   const [assets, sources] = getPairsTokenAggregator(
     reserveAssets as { [tokenSymbol: string]: string },
-    chainlinkAggregators
+    deployedAggregators //chainlinkAggregators
   );
 
   // Deploy AaveOracle
