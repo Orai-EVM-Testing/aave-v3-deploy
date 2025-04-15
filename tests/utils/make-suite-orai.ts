@@ -61,7 +61,7 @@ import {
     helpersContract: AaveProtocolDataProvider;
     worai: WETH9;
     aWorai: AToken;
-    usdc: ERC20Mintable;
+    usdc: IERC20;
     aUsdc: AToken;
     variableDebtUsdc: VariableDebtToken;
     addressesProvider: PoolAddressesProvider;
@@ -237,7 +237,7 @@ import {
     )?.tokenAddress;
   
     const woraiAddress = reservesTokens.find(
-      (token) => token.symbol === "wORAI"
+      (token) => token.symbol === "WORAI"
     )?.tokenAddress;
     const {
       variableDebtTokenAddress: variableDebtUsdcAddress,
@@ -265,11 +265,11 @@ import {
     testEnv.aWorai = await getAToken(aWoraiAddress);
     testEnv.variableDebtUsdc = await getVariableDebtToken(variableDebtUsdcAddress);
   
-    // testEnv.usdc = await getERC20(usdcAddress);
-    testEnv.usdc = (await ethers.getContractAt(
-      "ERC20Mintable",
-      usdcAddress
-    )) as ERC20Mintable;
+    testEnv.usdc = await getERC20(usdcAddress);
+    // testEnv.usdc = (await ethers.getContractAt(
+    //   "ERC20Mintable",
+    //   usdcAddress
+    // )) as ERC20Mintable;
     testEnv.worai = await getWETH(woraiAddress);
   
   

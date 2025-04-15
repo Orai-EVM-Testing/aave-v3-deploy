@@ -34,47 +34,66 @@ const func: DeployFunction = async function ({
     process.env.FORK ? process.env.FORK : hre.network.name
   ) as eNetwork;
 
-  // if (isProductionMarket(poolConfig)) {
-  //   console.log("[NOTICE] Skipping deployment of testnet price aggregators");
-  //   return;
-  // }
+  if (isProductionMarket(poolConfig)) {
+    let priceOracleAddress: string;
+    let contractToDeploy: string;
+    let prefix: string;
 
-  let priceOracleAddress;
-  let contractToDeploy;
-  let prefix;
+    const reserves = await getReserveAddresses(poolConfig, network);
+    const priceOracleAddress_sapphireTestnet = "0x2300221C0719748D6322F24444e938C8873eb200";
+    const priceOracleAddress_sapphireMainnet = "0x26eEaD16064cF7F24c90Cceb4bFEB23E8e7ad4e4";
+    const priceOracleAddress_oraiMainnet = "0xb0DfcC0Ee3a024dEB7753F49f1Cb0b0681489fda";
+    const priceOracleAddress_oraiTestnet = "0x1947b853aD7bFc987D91DDB26fddEABC100C5070";
 
-  const reserves = await getReserveAddresses(poolConfig, network);
-  const priceOracleAddress_sapphireTestnet = "0x2300221C0719748D6322F24444e938C8873eb200";
-  const priceOracleAddress_sapphireMainnet = "0x26eEaD16064cF7F24c90Cceb4bFEB23E8e7ad4e4";
-  const priceOracleAddress_oraiMainnet = "0xb0DfcC0Ee3a024dEB7753F49f1Cb0b0681489fda";
-  const priceOracleAddress_oraiTestnet = "0x1947b853aD7bFc987D91DDB26fddEABC100C5070";
+    switch (network) {
+      case "oraiMainnet":
+        priceOracleAddress = priceOracleAddress_oraiMainnet;
+        contractToDeploy = "OraiPriceAggregator";
+        prefix = MAINNET_PRICE_AGGR_PREFIX;
+        break;
+      case "sapphireTestnet":
+        priceOracleAddress = priceOracleAddress_sapphireTestnet;
+        contractToDeploy = "PriceAggregator";
+        prefix = TESTNET_PRICE_AGGR_PREFIX;
+        break;
+      case "sapphireMainnet":
+        priceOracleAddress = priceOracleAddress_sapphireMainnet;
+        contractToDeploy = "PriceAggregator";
+        prefix = MAINNET_PRICE_AGGR_PREFIX;
+        break;
+      case "oraiTestnet":
+        priceOracleAddress = priceOracleAddress_oraiTestnet;
+        contractToDeploy = "OraiPriceAggregator";
+        prefix = TESTNET_PRICE_AGGR_PREFIX;
+        break;
+      default:
+        throw new Error(`Unsupported network: ${network}`);
+    }
 
-  switch (network) {
-    case "oraiMainnet":
-      priceOracleAddress = priceOracleAddress_oraiMainnet;
-      contractToDeploy = "OraiPriceAggregator";
-      prefix = MAINNET_PRICE_AGGR_PREFIX;
-      break;
-    case "sapphireTestnet":
-      priceOracleAddress = priceOracleAddress_sapphireTestnet;
-      contractToDeploy = "PriceAggregator";
-      prefix = TESTNET_PRICE_AGGR_PREFIX;
-      break;
-    case "sapphireMainnet":
-      priceOracleAddress = priceOracleAddress_sapphireMainnet;
-      contractToDeploy = "PriceAggregator";
-      prefix = MAINNET_PRICE_AGGR_PREFIX;
-      break;
-    case "oraiTestnet":
-      priceOracleAddress = priceOracleAddress_oraiTestnet;
-      contractToDeploy = "OraiPriceAggregator";
-      prefix = TESTNET_PRICE_AGGR_PREFIX;
-      break;
-    default:
-      throw new Error(`Unsupported network: ${network}`);
+    let symbols = reserves ? Object.keys(reserves) : [];
+
+    if (isIncentivesEnabled(poolConfig)) {
+      const rewards = await getSymbolsByPrefix(TESTNET_REWARD_TOKEN_PREFIX);
+      symbols = [...symbols, ...rewards];
+    }
+
+    // Iterate each token symbol and deploy a mock aggregator
+    await Bluebird.each(symbols, async (symbol) => {
+      if (reserves && reserves[symbol]) {
+        await deploy(`${symbol}${prefix}`, {
+          args: [priceOracleAddress, reserves[symbol]],
+          from: deployer,
+          ...COMMON_DEPLOY_PARAMS,
+          contract: contractToDeploy,
+        });
+      }
+    });
+    return true;
   }
 
-  let symbols = reserves ? Object.keys(reserves) : [];
+  const reserves = await getReserveAddresses(poolConfig, network);
+
+  let symbols = Object.keys(reserves);
 
   if (isIncentivesEnabled(poolConfig)) {
     const rewards = await getSymbolsByPrefix(TESTNET_REWARD_TOKEN_PREFIX);
@@ -83,21 +102,19 @@ const func: DeployFunction = async function ({
 
   // Iterate each token symbol and deploy a mock aggregator
   await Bluebird.each(symbols, async (symbol) => {
-    // const price =
-    //   symbol === "StkAave"
-    //     ? MOCK_CHAINLINK_AGGREGATORS_PRICES["AAVE"]
-    //     : MOCK_CHAINLINK_AGGREGATORS_PRICES[symbol];
-    // if (!price) {
-    //   throw `[ERROR] Missing mock price for asset ${symbol} at MOCK_CHAINLINK_AGGREGATORS_PRICES constant located at src/constants.ts`;
-    // }
-    if (reserves && reserves[symbol]) {
-      await deploy(`${symbol}${prefix}`, {
-        args: [priceOracleAddress, reserves[symbol]],
-        from: deployer,
-        ...COMMON_DEPLOY_PARAMS,
-        contract: contractToDeploy,
-      });
+    const price =
+      symbol === "StkAave"
+        ? MOCK_CHAINLINK_AGGREGATORS_PRICES["AAVE"]
+        : MOCK_CHAINLINK_AGGREGATORS_PRICES[symbol];
+    if (!price) {
+      throw `[ERROR] Missing mock price for asset ${symbol} at MOCK_CHAINLINK_AGGREGATORS_PRICES constant located at src/constants.ts`;
     }
+    await deploy(`${symbol}${TESTNET_PRICE_AGGR_PREFIX}`, {
+      args: [price],
+      from: deployer,
+      ...COMMON_DEPLOY_PARAMS,
+      contract: "MockAggregator",
+    });
   });
 
   return true;

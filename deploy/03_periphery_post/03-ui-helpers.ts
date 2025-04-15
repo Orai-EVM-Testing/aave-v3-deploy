@@ -9,7 +9,7 @@ import {
 chainlinkAggregatorProxy,
 chainlinkEthUsdAggregatorProxy,
 } from "../../helpers/constants";
-import { eNetwork } from "../../helpers";
+import { eNetwork, getChainlinkOracles, isTestnetMarket, loadPoolConfig } from "../../helpers";
 
 const func: DeployFunction = async function ({
 getNamedAccounts,
@@ -23,33 +23,34 @@ const network = (
   process.env.FORK ? process.env.FORK : hre.network.name
 ) as eNetwork;
 
-// if (!chainlinkAggregatorProxy[network]) {
-//   console.log(
-//     '[Deployments] Skipping the deployment of UiPoolDataProvider due missing constant "chainlinkAggregatorProxy" configuration at ./helpers/constants.ts'
-//   );
-//   return;
-// }
+const poolConfig = loadPoolConfig(MARKET_NAME);
 
 let addressChainlinkAggregatorProxy, addressChainlinkEthUsdAggregatorProxy;
 
+if (isTestnetMarket(poolConfig)) {
+  const deployedAggregators = await getChainlinkOracles(poolConfig, network);
+  addressChainlinkAggregatorProxy = deployedAggregators["WORAI"];
+  addressChainlinkEthUsdAggregatorProxy = deployedAggregators["USDT"]
+}
+
 if (network === "sapphireTestnet" ) {
-  addressChainlinkAggregatorProxy = (await deployments.get(`WROSE-${TESTNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address;
-  addressChainlinkEthUsdAggregatorProxy = (await deployments.get(`USDC-${TESTNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address;
+  addressChainlinkAggregatorProxy = (await deployments.get(`WROSE${TESTNET_PRICE_AGGR_PREFIX}`)).address;
+  addressChainlinkEthUsdAggregatorProxy = (await deployments.get(`USDC${TESTNET_PRICE_AGGR_PREFIX}`)).address;
 }
 
 if (network === "sapphireMainnet") {
-  addressChainlinkAggregatorProxy = (await deployments.get(`WROSE-${MAINNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address;
-  addressChainlinkEthUsdAggregatorProxy = (await deployments.get(`USDC-${MAINNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address;
+  addressChainlinkAggregatorProxy = (await deployments.get(`WROSE${MAINNET_PRICE_AGGR_PREFIX}`)).address;
+  addressChainlinkEthUsdAggregatorProxy = (await deployments.get(`USDC${MAINNET_PRICE_AGGR_PREFIX}`)).address;
 }
 
 if (network === "oraiTestnet") {
-  addressChainlinkAggregatorProxy = (await deployments.get(`WORAI-${TESTNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address;
-  addressChainlinkEthUsdAggregatorProxy = (await deployments.get(`USDT-${TESTNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address;
+  addressChainlinkAggregatorProxy = (await deployments.get(`WORAI${TESTNET_PRICE_AGGR_PREFIX}`)).address;
+  addressChainlinkEthUsdAggregatorProxy = (await deployments.get(`USDT${TESTNET_PRICE_AGGR_PREFIX}`)).address;
 }
 
 if (network === "oraiMainnet") {
-  addressChainlinkAggregatorProxy = (await deployments.get(`WORAI-${MAINNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address;
-  addressChainlinkEthUsdAggregatorProxy = (await deployments.get(`usdc-${MAINNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address;
+  addressChainlinkAggregatorProxy = (await deployments.get(`WORAI${MAINNET_PRICE_AGGR_PREFIX}`)).address;
+  addressChainlinkEthUsdAggregatorProxy = (await deployments.get(`USDC${MAINNET_PRICE_AGGR_PREFIX}`)).address;
 }
 
 // Deploy UiIncentiveDataProvider getter helper

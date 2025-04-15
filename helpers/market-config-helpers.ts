@@ -199,18 +199,18 @@ export const getReserveAddresses = async (
     "[WARNING] Using deployed Testnet tokens instead of ReserveAssets from configuration file"
   );
   
-  // const reservesKeys = Object.keys(poolConfig.ReservesConfig);
-  // const allDeployments = await hre.deployments.all();
-  // const testnetTokenKeys = Object.keys(allDeployments).filter(
-  //   (key) =>
-  //     key.includes(TESTNET_TOKEN_PREFIX) &&
-  //     reservesKeys.includes(key.replace(TESTNET_TOKEN_PREFIX, ""))
-  // );
-  // return testnetTokenKeys.reduce<ITokenAddress>((acc, key) => {
-  //   const symbol = key.replace(TESTNET_TOKEN_PREFIX, "");
-  //   acc[symbol] = allDeployments[key].address;
-  //   return acc;
-  // }, {});
+  const reservesKeys = Object.keys(poolConfig.ReservesConfig);
+  const allDeployments = await hre.deployments.all();
+  const testnetTokenKeys = Object.keys(allDeployments).filter(
+    (key) =>
+      key.includes(TESTNET_TOKEN_PREFIX) &&
+      reservesKeys.includes(key.replace(TESTNET_TOKEN_PREFIX, ""))
+  );
+  return testnetTokenKeys.reduce<ITokenAddress>((acc, key) => {
+    const symbol = key.replace(TESTNET_TOKEN_PREFIX, "");
+    acc[symbol] = allDeployments[key].address;
+    return acc;
+  }, {});
 };
 
 export const getSubTokensByPrefix = async (

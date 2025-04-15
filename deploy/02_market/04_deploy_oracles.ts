@@ -1,5 +1,5 @@
 import { chainlinkAggregatorProxy } from './../../helpers/constants';
-import { getChainlinkOracles } from "../../helpers/market-config-helpers";
+import { getChainlinkOracles, isTestnetMarket } from "../../helpers/market-config-helpers";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
 import { COMMON_DEPLOY_PARAMS } from "../../helpers/env";
@@ -44,37 +44,40 @@ const func: DeployFunction = async function ({
   const fallbackOracleAddress = ZERO_ADDRESS;
 
   const reserveAssets = await getReserveAddresses(poolConfig, network);
-  // const chainlinkAggregators = await getChainlinkOracles(poolConfig, network);
 
   let deployedAggregators;
+  if (isTestnetMarket(poolConfig)) {
+    deployedAggregators = await getChainlinkOracles(poolConfig, network);
+  }
+
   if (network === "oraiTestnet") {
     deployedAggregators = {
-      WORAI: (await deployments.get(`WORAI-${TESTNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address,
-      USDT: (await deployments.get(`USDT-${TESTNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address,
+      WORAI: (await deployments.get(`WORAI${TESTNET_PRICE_AGGR_PREFIX}`)).address,
+      USDT: (await deployments.get(`USDT${TESTNET_PRICE_AGGR_PREFIX}`)).address,
     }
   }
 
   if (network === "sapphireMainnet") {
     deployedAggregators = {
-      USDC: (await deployments.get(`USDC-${MAINNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address,
-      WROSE: (await deployments.get(`WROSE-${MAINNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address,
+      USDC: (await deployments.get(`USDC${MAINNET_PRICE_AGGR_PREFIX}`)).address,
+      WROSE: (await deployments.get(`WROSE${MAINNET_PRICE_AGGR_PREFIX}`)).address,
     }
   }
 
   if (network === "sapphireTestnet") {
     deployedAggregators = {
-      USDC: (await deployments.get(`USDC-${TESTNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address,
-      USDT: (await deployments.get(`USDT-${TESTNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address,
-      WROSE: (await deployments.get(`WROSE-${TESTNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address,
-      stROSE: (await deployments.get(`stROSE-${TESTNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address,
+      USDC: (await deployments.get(`USDC${TESTNET_PRICE_AGGR_PREFIX}`)).address,
+      USDT: (await deployments.get(`USDT${TESTNET_PRICE_AGGR_PREFIX}`)).address,
+      WROSE: (await deployments.get(`WROSE${TESTNET_PRICE_AGGR_PREFIX}`)).address,
+      stROSE: (await deployments.get(`stROSE${TESTNET_PRICE_AGGR_PREFIX}`)).address,
     }
   }
 
   if (network === "oraiMainnet") {
     deployedAggregators = {
-      OCH: (await deployments.get(`OCH-${MAINNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address,
-      WORAI: (await deployments.get(`WORAI-${MAINNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address,
-      USDC: (await deployments.get(`USDC-${MAINNET_PRICE_AGGR_PREFIX}-${MARKET_NAME}`)).address,
+      OCH: (await deployments.get(`OCH${MAINNET_PRICE_AGGR_PREFIX}`)).address,
+      WORAI: (await deployments.get(`WORAI${MAINNET_PRICE_AGGR_PREFIX}`)).address,
+      USDC: (await deployments.get(`USDC${MAINNET_PRICE_AGGR_PREFIX}`)).address,
     }
   }
 
